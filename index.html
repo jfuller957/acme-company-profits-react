@@ -90,10 +90,22 @@
 
 
         return (
-          <ul>
-            <li>{ profits.fiscalYear }</li>
-            <li>{ profits.amount }</li>
-          </ul>
+          <div id="content">
+            <ul>
+              {
+                profits.map( profit =>
+                  <li key={ profit.id }>
+                    <div>
+                      { profit.fiscalYear.slice(4) }
+                    </div>
+                    <div>
+                      { profit.amount }
+                    </div>
+                  </li>
+                )
+              }
+            </ul>
+          </div>
         )
       }
     }
