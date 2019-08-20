@@ -23,8 +23,42 @@
 </head>
 <body>
 
-  <script>
+  <div id="root"></div>
 
+  <script type="text/babel">
+
+    const root = document.querySelector('#root');
+    const { render } = ReactDOM;
+    const { Component } = React;
+    const { HashRouter, Route, Switch, Link, Redirect } = ReactRouterDOM;
+
+    const Nav = ({ home, companies })=> {
+      return (
+        <div>
+          <Link to='/'>Home</Link>
+          <Link to='/companies'>Companies</Link>
+        </div>
+      );
+    };
+
+    class App extends Component {
+      constructor(){
+        super();
+        this.state = {
+          companies: []
+        };
+      }
+      async componentDidMount(){
+
+      }
+      render(){
+        const { companies } = this.state;
+        return (
+          <h1>Hello?</h1>
+        )
+      }
+    }
+    render(<App />, root);
   </script>
 </body>
 </html>
