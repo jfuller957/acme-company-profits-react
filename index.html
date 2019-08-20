@@ -41,15 +41,59 @@
       );
     };
 
-    const Companies = ({ companies }) => {
+    const Home = ()=> {
       return (
-        <ul>
-          {
-            companies.map( company => <li key={ company.id } >{ company.name }</li>)
-          }
-        </ul>
+        <h1>Welcome!</h1>
       );
     };
+
+    const Companies = ({ companies }) => {
+      return (
+        <div>
+          <ul>
+            {
+              companies.map( company => <li key={ company.id } >
+                <Link to={ `/companies/${ company.id }`}>
+                  { company.name }
+                </Link>
+              </li>)
+            }
+          </ul>
+          <Route path='/companies/:id' render={({match})=> <Company companies={ companies } match={ match } /> } />
+        </div>
+      );
+    };
+
+    class Company extends Component {
+      constructor() {
+        super();
+        this.state = {
+          company: {}
+        };
+      }
+
+      async componentDidMount(){
+        const company = (await axios.get(`https://acme-users-api-rev.herokuapp.com/api/companies/${this.props.match.params.id}/companyProfits`)).data
+        this.setState({ company });
+      }
+
+      async componentDidUpdate(prevProps){
+        if(this.props.match.params.id !== prevProps.match.params.id) {
+          const company = (await axios.get(`https://acme-users-api-rev.herokuapp.com/api/companies/${this.props.match.params.id}/companyProfits`)).data
+          this.setState({ company });
+        }
+      }
+
+      render(){
+        const { company } = this.state;
+        return (
+          <ul>
+            <li>{ company.fiscalYear }</li>
+            <li>{ company.amount }</li>
+          </ul>
+        )
+      }
+    }
 
     class App extends Component {
       constructor(){
@@ -69,6 +113,9 @@
             <Route render={ ()=> <Nav companies={ companies } /> } />
             <Switch>
               <Route path='/companies' render={ ()=> <Companies companies={ companies } /> } />
+              <Route exact path='/' component={ Home } />
+              <Route path='/companies/:id?' render={({match})=> <Company companies={ companies } match={ match } /> } />
+              <Redirect to='/' />
             </Switch>
           </HashRouter>
         )
